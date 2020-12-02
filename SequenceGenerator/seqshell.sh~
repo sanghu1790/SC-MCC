@@ -31,5 +31,9 @@ do
      echo '()' >> $1-seq/seq/ALL-SEQUENCES-$BENCHMARK.txt
 done
 rm Seq_For_Pred*
-rm Seq_For_Pred1
+rm err.txt
+mkdir "exp/meta" 2> err.txt
+javac MetaJavaFileGenerator.java
+java MetaJavaFileGenerator
+mv exp/* "$1-seq"
 rm err.txt

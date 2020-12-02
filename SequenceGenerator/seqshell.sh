@@ -16,8 +16,6 @@ done
 javac SequenceFileGenerator.java
 java SequenceFileGenerator 
 mkdir "$1-seq" 2> err.txt
-mv exp/seq "$1-seq"/
-mv exp/* "$1-seq"
 for y1 in `ls -v $1-seq/seq/Sequence-atom-*-*.txt`;   
 do 
      echo $y1 >> $1-seq/seq/ALL-SEQUENCES-$BENCHMARK.txt
@@ -32,7 +30,9 @@ do
 done
 rm Seq_For_Pred*
 rm err.txt
-mkdir "test14.c-seq/meta" 2> err.txt
+mkdir "exp/meta" 2> err.txt
 javac MetaJavaFileGenerator.java
 java MetaJavaFileGenerator
+mv exp/seq "$1-seq"/
+mv exp/* "$1-seq"
 rm err.txt

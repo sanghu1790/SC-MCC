@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 public class MetaJavaFileGenerator {
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
-        BufferedReader PC=new BufferedReader(new FileReader("test14.c-seq/Condition_And_Predicates.txt"));
+        BufferedReader PC=new BufferedReader(new FileReader("exp/Condition_And_Predicates.txt"));
         String r=PC.readLine();
         int no_of_pred=0;
 
@@ -27,8 +27,8 @@ public class MetaJavaFileGenerator {
 	    	r=r.replace(")", "");
             	String p[]=r.split("~");
             	no_of_pred++;
-	    	BufferedReader PC1=new BufferedReader(new FileReader("test14.c-seq/predicateResults"+no_of_pred+".txt"));
-	    	PrintWriter out_cp_onlyvalue=new PrintWriter("test14.c-seq/meta/metaFileOfPred-"+no_of_pred+".txt");
+	    	BufferedReader PC1=new BufferedReader(new FileReader("exp/predicateResults"+no_of_pred+".txt"));
+	    	PrintWriter out_cp_onlyvalue=new PrintWriter("exp/meta/metaFileOfPred-"+no_of_pred+".txt");
             
             	String r1=PC1.readLine();
 	    	String tVal[] = null;
