@@ -32,3 +32,7 @@ do
 done
 rm Seq_For_Pred*
 rm err.txt
+mkdir "test14.c-seq/meta" 2> err.txt
+javac MetaJavaFileGenerator.java
+java MetaJavaFileGenerator
+rm err.txt
