@@ -1,0 +1,12 @@
+#!/bin/ksh
+export BENCHMARK=$1
+#./tx.sh $BENCHMARK 1
+python mutator.py $BENCHMARK.c $BENCHMARK-Mutants
+./mutator.sh $BENCHMARK
+mkdir $BENCHMARK-RESULTS
+mv ${BENCHMARK}-KLEE-FILES $BENCHMARK-RESULTS
+mv Mutant-compilable-check.txt $BENCHMARK-RESULTS
+mv killed-Mutants-report.txt $BENCHMARK-RESULTS
+mv $BENCHMARK-report.txt $BENCHMARK-RESULTS
+mv $BENCHMARK-Mutants $BENCHMARK-RESULTS
+
