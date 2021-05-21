@@ -1,7 +1,0 @@
-__CPROVER_assert(! (((!(date>=22))&&(ch==12))||((!(date<=21))&&(ch==1))) );
-__CPROVER_assert(! (((!(date>=22))&&(!(ch==1)2))||((date<=21)&&(!(ch==1)))) );
-__CPROVER_assert(! (((!(date>=22))&&(ch==12))||((date<=21)&&(ch==1))) );
-__CPROVER_assert(! (((date>=22)&&(!(ch==12)))||((!(date<=21))&&(ch==1))) );
-__CPROVER_assert(! (((date>=22)&&(!(!(ch==1)2)))||((date<=21)&&(!(ch==1)))) );
-__CPROVER_assert(! (((date>=22)&&(!(ch==12)))||((date<=21)&&(ch==1))) );
-__CPROVER_assert(! (((date>=22)&&(ch==12))||((date<=21)&&(ch==1))) );

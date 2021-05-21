@@ -46,6 +46,7 @@ public class MCDC_Sequence_Generator_multiple {
             r=r.substring(p1, p2+1);
             r=r.replace(" ", "");
             out_cp.println(r);
+	    System.out.println("*********************"+r);
             out_cp.flush();
             }
             r=fpReadPredicate1.readLine();
