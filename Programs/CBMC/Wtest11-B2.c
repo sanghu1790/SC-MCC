@@ -11,6 +11,7 @@
 #define BOUND 2
 
 
+
 // inputs
 int inputC = 3;
 int inputD = 4;
@@ -726,7 +727,7 @@ printf("%d", 26);//return 26;
 }
 }
 }
-printf("%d", -2);
+printf("%d", -2)
 }
 
 int input, output;

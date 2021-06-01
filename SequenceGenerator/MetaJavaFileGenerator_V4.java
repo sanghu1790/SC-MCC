@@ -145,7 +145,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 
 	while(eachLine!=null){
 		for(String eachPredicate : mapPredicate.keySet()){
-			if(eachLine.contains(" while(")||eachLine.contains(" while (")||eachLine.contains(" while(") ||eachLine.contains(" for(")||eachLine.contains(" for (")||eachLine.contains("  for (")){
+			if(eachLine.contains(" while(")||eachLine.contains(" while (")||eachLine.contains(" while(") ||eachLine.contains("for(")||eachLine.contains(" for(")||eachLine.contains(" for (")||eachLine.contains("  for (")){
 				int k1_f=eachPredicate.indexOf('(');
 				int k2_f=eachPredicate.lastIndexOf(')');
 				String eachPredicate1=eachPredicate.substring(1, eachPredicate.length()-1);
@@ -166,12 +166,12 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 							out_metaFile_V3.flush();
 							eachLine = originalFile.readLine();
 							if(eachLine.contains("{")){
-							openBraces++;
+								openBraces++;
 							}
 							if(eachLine.contains("}")){
-							if(openBraces==closeBraces)
-								break;
-							closeBraces++;
+								if(openBraces==closeBraces)
+									break;
+								closeBraces++;
 							}
 						}
 						eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
@@ -183,15 +183,15 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 						break;
 					}
 					
-			}else if(eachLine.contains("if(")){
-				String eachPredicate1=eachPredicate.substring(1, eachPredicate.length()-1);
-				if(eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
-					if(!(eachLine.contains("||")) && !(eachLine.contains("&&"))){
-						String assertStmts1 = "__CPROVER_assert("+eachPredicate1+" ,\"ASSERTION VIOLATION\");";
-						String assertStmts2 = "__CPROVER_assert(! ("+eachPredicate1+") ,\"ASSERTION VIOLATION\");";
-						eachLine=eachLine.replace(eachLine,"\n" + assertStmts1 +"\n" +assertStmts2 + "\n" + eachLine);
-					}
-				}
+//			}else if(eachLine.contains("if(")){
+//				String eachPredicate1=eachPredicate.substring(1, eachPredicate.length()-1);
+//				if(eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
+//					if(!(eachLine.contains("||")) && !(eachLine.contains("&&"))){
+//						String assertStmts1 = "__CPROVER_assert("+eachPredicate1+" ,\"ASSERTION VIOLATION\");";
+//						String assertStmts2 = "__CPROVER_assert(! ("+eachPredicate1+") ,\"ASSERTION VIOLATION\");";
+//						eachLine=eachLine.replace(eachLine,"\n" + assertStmts1 +"\n" +assertStmts2 + "\n" + eachLine);
+//					}
+//				}
 				
 			}
 			
@@ -222,8 +222,8 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 				}
 				String Stmts1 = "__CPROVER_assert(("+eachPredicate+") == 0,\"ASSERTION VIOLATION\");";					
 	    			String Stmts2 = "__CPROVER_assert(!("+eachPredicate+") == 0,\"ASSERTION VIOLATION\");";			
-	            			assertStmts = assertStmts + "\n" +Stmts1 + "\n" +Stmts2;
-	    			//System.out.println("1*********************"+eachPredicate);
+            			assertStmts = assertStmts + "\n" +Stmts1 + "\n" +Stmts2;
+	    			System.out.println("1*********************"+eachPredicate);
 				mapPredicate.put(eachPredicate, assertStmts);
 				eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
 				//System.out.println("*********************eachLine1 "+eachLine);
