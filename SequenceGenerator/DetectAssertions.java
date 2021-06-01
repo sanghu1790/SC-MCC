@@ -22,7 +22,7 @@ public class DetectAssertions{
 	        System.err.println("File name not provided!");
 	        System.exit(1);
     	}
-        BufferedReader PC=new BufferedReader(new FileReader("exp/meta/"+fileName+"-Violated-Lines.txt"));
+        BufferedReader PC=new BufferedReader(new FileReader("../CBMC/"+fileName+"-Violated-Lines.txt"));
         String r=PC.readLine();
 	List<String> assertLineNumbers=new ArrayList<String>();
         int countAllAV=0;

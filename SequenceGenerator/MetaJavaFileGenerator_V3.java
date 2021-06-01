@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*; 
+import java.io.LineNumberReader;
 
 /**
  *
@@ -223,7 +224,69 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 		
 		eachLine = originalFile.readLine();
 	}
+	LineNumberReader lineNumberReader = new LineNumberReader(new FileReader("exp/meta/MetaWithBraces-V3.c"));
+	eachLine=lineNumberReader.readLine();
+	PrintWriter out_metaFile_Loop=new PrintWriter("exp/meta/LoopAssertStatements.csv");
+	
+	while(eachLine!=null){
+			//System.out.println("Reading"+eachLine);
+			//LoopNum++;
+			eachLine = generateDB(eachLine, mapPredicate, lineNumberReader, out_metaFile_Loop);
+			///////////////////////////////////////////////////////////////
+		eachLine=lineNumberReader.readLine();
+		
+	}
+	lineNumberReader.close();
 	
             
     }
+	public static int LoopNum = 1;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static String generateDB(String eachLine,  Map<String,String> mapPredicate, LineNumberReader lineNumberReader, PrintWriter out_metaFile_Loop) throws IOException{
+		
+		if((eachLine.contains(" while(")||eachLine.contains(" while (")||eachLine.contains(" while(") ||eachLine.contains(" for(")||eachLine.contains(" for (")||eachLine.contains("  for ("))&& !eachLine.contains(" while(0)") && !eachLine.contains(" for(;0;)") && !eachLine.contains(" while(1)") && !eachLine.contains(" for(;1;)")){
+				for(String eachPredicate : mapPredicate.keySet()){
+				
+					//System.out.println("Reading");
+				String eachPredicate1=eachPredicate.substring(1, eachPredicate.length()-1);
+				//System.out.println("*********************eachPredicate "+eachPredicate1);
+					if(eachPredicate1.length()!=1 && eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
+						
+						int enteringLNum = lineNumberReader.getLineNumber();
+						//System.out.println("Line number of "+eachLine+" at line "+lineNumberReader.getLineNumber());
+						
+						String assertStmts = mapPredicate.get(eachPredicate);
+						String[] lines = assertStmts.split("\r\n|\r|\n");
+						int totalLines = lines.length-1;
+						if(lines.length ==1){
+							totalLines=2;
+						}
+						//System.out.println("Total Lines "+lines.length);
+						while(true){
+							eachLine = lineNumberReader.readLine();
+							if(eachLine.contains("}")){
+								//LoopNum++;
+								break;
+							}else if(eachLine.contains("{")){
+								eachLine = generateDB(eachLine,  mapPredicate, lineNumberReader, out_metaFile_Loop);
+							}
+						}
+						int closingLNum = lineNumberReader.getLineNumber()-1;
+						
+						for(int itr=1; itr<=totalLines; itr++){
+							String linedata = "L"+LoopNum+";"+enteringLNum+";"+(enteringLNum+itr)+";"+((closingLNum-totalLines)+itr);
+							out_metaFile_Loop.println(linedata);
+							out_metaFile_Loop.flush();
+							//if(itr==totalLines){LoopNum++;}
+						}
+						++LoopNum;
+						break;
+						
+					}
+					
+				
+			}
+		}
+		return eachLine;
+	}
 }

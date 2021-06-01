@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*; 
+import java.io.LineNumberReader;
 
 /**
  *
@@ -50,7 +51,9 @@ Map<Integer, String> sortedMapPosition = new TreeMap<Integer, String>(mapPositio
 List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());	    
 //Set<Integer> sortedKeys = sortedMapPosition.keySet();
 	    String predicate = r;
+	    String predicate1 = r;
 	    String finalPredicateArray="";
+	    
             if(r.contains("&&")||r.contains("||")){
 
             	r=r.replace("&&", "~");
@@ -66,45 +69,50 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 	    	String tVal[] = null;
 		
 	    	for(int n1=0;n1<p.length;n1++){
-			
+			int insertFlag = 0;
 			while(r1!=null){
 				String finalPredicate = "";
 	        		tVal=r1.split(",");
 				Integer sortedKeysIndex = -1;
 				for(int n2=0;n2<tVal.length;n2++){
 
-					System.out.println(tVal[n2]);
+					//System.out.println(tVal[n2]);
 					//Integer mapIndex=sortedKeys.get(sortedKeysIndex);
 					if(tVal[n2].equals("F")){
 						if(sortedKeysIndex != -1){
-							System.out.println("!"+p[n2] + finalPredicate.contains(p[n2]));
+							//System.out.println("!"+p[n2] + finalPredicate.contains(p[n2]));
                                 			finalPredicate = finalPredicate + sortedMapPosition.get(sortedKeys.get(sortedKeysIndex))+ "!("+p[n2]+")";
 						}else{
-							System.out.println("!"+p[n2] + finalPredicate.contains(p[n2]));
+							//System.out.println("!"+p[n2] + finalPredicate.contains(p[n2]));
                                 			finalPredicate = "!("+p[n2]+")";
 						}
+						
 
 					}else{
 						if(sortedKeysIndex != -1){
-							System.out.println(p[n2]);
+							//System.out.println(p[n2]);
 			                        	finalPredicate = finalPredicate + sortedMapPosition.get(sortedKeys.get(sortedKeysIndex)) + p[n2];
 						}else{
-							System.out.println(p[n2]);
+							//System.out.println(p[n2]);
 			                        	finalPredicate = p[n2];
 						}
 					}
 					sortedKeysIndex++;
-
+					if(insertFlag==0){
+					String assertStmts1 = "__CPROVER_assert(!("+p[n2]+"),\"ASSERTION VIOLATION\");";					String assertStmts2 = "__CPROVER_assert(!(!("+p[n2]+")),\"ASSERTION VIOLATION\");";					finalPredicateArray = finalPredicateArray + "\n" +assertStmts1 + "\n" +assertStmts2;
+					}
+		
 				}
 
 				finalPredicate = "__CPROVER_assert(! ("+finalPredicate+") ,\"ASSERTION VIOLATION\");";
 				finalPredicateArray = finalPredicateArray + "\n" +finalPredicate;	
-				System.out.println("*********************"+finalPredicate);
+				//System.out.println("*********************"+finalPredicate);
 				out_cp_onlyvalue.println(finalPredicate);
 				out_cp_onlyvalue.flush();	
 				tVal=null;
 
 				r1=PC1.readLine();
+				insertFlag=1;
 	
 			}
 			
@@ -112,10 +120,11 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 
 	    	}
 	         
-	    	System.out.println("*********************"+p.length);
+	    	//System.out.println("*********************"+p.length);
 
             }
-	    mapPredicate.put(predicate, finalPredicateArray);
+	    //System.out.println("2*********************"+finalPredicateArray);
+	    mapPredicate.put(predicate1, finalPredicateArray);
             r=PC.readLine();
 
         }
@@ -132,7 +141,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 	
 	
         PrintWriter out_metaFile_V3=new PrintWriter("exp/meta/MetaWithBracesWhile-V3.c");
-	System.out.println("*********************"+mapPredicate.size());
+	//System.out.println("*********************"+mapPredicate.size());
 
 	while(eachLine!=null){
 		for(String eachPredicate : mapPredicate.keySet()){
@@ -140,7 +149,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 				int k1_f=eachPredicate.indexOf('(');
 				int k2_f=eachPredicate.lastIndexOf(')');
 				String eachPredicate1=eachPredicate.substring(1, eachPredicate.length()-1);
-				System.out.println("*********************eachPredicate "+eachPredicate1);
+				//System.out.println("*********************eachPredicate "+eachPredicate1);
 					if(eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
 						String assertStmts = mapPredicate.get(eachPredicate);
 						
@@ -150,12 +159,19 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 							String assertStmts2 = "__CPROVER_assert(! ("+eachPredicate1+") ,\"ASSERTION VIOLATION\");";
 							eachLine=eachLine.replace(eachLine,eachLine + "\n" + assertStmts1 +"\n" +assertStmts2);
 						}
+						int openBraces = 0;
+						int closeBraces = 0;
 						while(true){
 							out_metaFile_V3.println(eachLine);
 							out_metaFile_V3.flush();
 							eachLine = originalFile.readLine();
+							if(eachLine.contains("{")){
+							openBraces++;
+							}
 							if(eachLine.contains("}")){
+							if(openBraces==closeBraces)
 								break;
+							closeBraces++;
 							}
 						}
 						eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
@@ -182,7 +198,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 		}
 		out_metaFile_V3.println(eachLine);
 		out_metaFile_V3.flush();
-		System.out.println("*********************"+eachLine);
+		//System.out.println("*********************"+eachLine);
 		
 		eachLine = originalFile.readLine();
 	}
@@ -191,22 +207,26 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 	eachLine=originalFile.readLine();
 	
         out_metaFile_V3=new PrintWriter("exp/meta/MetaWithBraces-V4.c");
-	System.out.println("*********************"+mapPredicate.size());
+	//System.out.println("*********************"+mapPredicate.size());
 
 	while(eachLine!=null){
 		String removeOR=eachLine;
 		for(String eachPredicate : mapPredicate.keySet()){
+			
 			if(!(eachLine.contains(" while(")||eachLine.contains(" while (")||eachLine.contains(" while(") ||eachLine.contains(" for(")||eachLine.contains(" for (")||eachLine.contains("  for (") || eachLine.contains("__CPROVER_assert("))){
-
+			
 			if(eachLine.replaceAll("\\s+","").contains(eachPredicate)){
-
 				String assertStmts = mapPredicate.get(eachPredicate);
-				
 				if(assertStmts.contains("||")){
 					assertStmts=assertStmts.replace("||", "&&");
 				}
+				String Stmts1 = "__CPROVER_assert(("+eachPredicate+") == 0,\"ASSERTION VIOLATION\");";					
+	    			String Stmts2 = "__CPROVER_assert(!("+eachPredicate+") == 0,\"ASSERTION VIOLATION\");";			
+	            			assertStmts = assertStmts + "\n" +Stmts1 + "\n" +Stmts2;
+	    			//System.out.println("1*********************"+eachPredicate);
+				mapPredicate.put(eachPredicate, assertStmts);
 				eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
-				System.out.println("*********************eachLine1 "+eachLine);
+				//System.out.println("*********************eachLine1 "+eachLine);
 				break;
 			}
 			}else  if(eachLine.contains("__CPROVER_assert(")){
@@ -214,16 +234,80 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 			}
 			
 			
+			
 		}
 		out_metaFile_V3.println(eachLine);
 		out_metaFile_V3.flush();
 		//out_metaFile_V2.println(removeOR);
 		//out_metaFile_V2.flush();
-		System.out.println("*********************"+eachLine);
+		//System.out.println("*********************"+eachLine);
 		
 		eachLine = originalFile.readLine();
 	}
+
+	LineNumberReader lineNumberReader = new LineNumberReader(new FileReader("exp/meta/MetaWithBraces-V4.c"));
+	eachLine=lineNumberReader.readLine();
+	PrintWriter out_metaFile_Loop=new PrintWriter("exp/meta/LoopAssertStatements.csv");
+	
+	while(eachLine!=null){
+			////System.out.println("Reading"+eachLine);
+			//LoopNum++;
+			eachLine = generateDB(eachLine, mapPredicate, lineNumberReader, out_metaFile_Loop);
+			///////////////////////////////////////////////////////////////
+		eachLine=lineNumberReader.readLine();
+		
+	}
+	lineNumberReader.close();
 	
             
     }
+	public static int LoopNum = 1;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static String generateDB(String eachLine,  Map<String,String> mapPredicate, LineNumberReader lineNumberReader, PrintWriter out_metaFile_Loop) throws IOException{
+		
+		if((eachLine.contains(" while(")||eachLine.contains(" while (")||eachLine.contains(" while(") ||eachLine.contains(" for(")||eachLine.contains(" for (")||eachLine.contains("  for ("))&& !eachLine.contains(" while(0)") && !eachLine.contains(" for(;0;)") && !eachLine.contains(" while(1)") && !eachLine.contains(" for(;1;)")){
+				for(String eachPredicate : mapPredicate.keySet()){
+				
+					////System.out.println("Reading");
+				String eachPredicate1=eachPredicate.substring(1, eachPredicate.length()-1);
+				////System.out.println("*********************eachPredicate "+eachPredicate1);
+					if(eachPredicate1.length()!=1 && eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
+						
+						int enteringLNum = lineNumberReader.getLineNumber();
+						////System.out.println("Line number of "+eachLine+" at line "+lineNumberReader.getLineNumber());
+						
+						String assertStmts = mapPredicate.get(eachPredicate);
+						String[] lines = assertStmts.split("\r\n|\r|\n");
+						int totalLines = lines.length-1;
+						if(lines.length ==1){
+							totalLines=2;
+						}
+						////System.out.println("Total Lines "+lines.length);
+						while(true){
+							eachLine = lineNumberReader.readLine();
+							if(eachLine.contains("}")){
+								//LoopNum++;
+								break;
+							}else if(eachLine.contains("{")){
+								eachLine = generateDB(eachLine,  mapPredicate, lineNumberReader, out_metaFile_Loop);
+							}
+						}
+						int closingLNum = lineNumberReader.getLineNumber()-1;
+						
+						for(int itr=1; itr<=totalLines; itr++){
+							String linedata = "L"+LoopNum+";"+enteringLNum+";"+(enteringLNum+itr)+";"+((closingLNum-totalLines)+itr);
+							out_metaFile_Loop.println(linedata);
+							out_metaFile_Loop.flush();
+							//if(itr==totalLines){LoopNum++;}
+						}
+						++LoopNum;
+						break;
+						
+					}
+					
+				
+			}
+		}
+		return eachLine;
+	}
 }
