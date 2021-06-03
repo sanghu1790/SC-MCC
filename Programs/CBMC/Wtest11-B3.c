@@ -726,7 +726,7 @@ printf("%d", 26);//return 26;
 }
 }
 }
-printf("%d", -2)
+printf("%d", -2);
 }
 
 int input, output;

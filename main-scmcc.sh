@@ -84,79 +84,13 @@ cd CBMC
 ./scmcc-cbmc.sh $BENCHMARK $VERSION $BOUND
 cd ..
 
-cd SequenceGenerator
-javac DetectAssertions.java
-java DetectAssertions $BENCHMARK
-cd ..
-
-#awk '/symb=/' CBMC/$BENCHMARK-result-SC-MCC.txt | awk 'NR == 1' >> $BENCHMARK-resultCheck.txt
-#awk '/Trace/ || /OUTPUT/' CBMC/$BENCHMARK-result-SC-MCC.txt >> $BENCHMARK-resultCheck.txt
-
-#mkdir $BENCHMARK-Mode2-TC
-#testcaseCount=0
-#while read -r line; do
-
-#if [ $(expr "$line" : "Trace.*$") -gt 0 ]; then ## begins with 'OUTPUT'
-#testcaseCount=`expr $testcaseCount + 1`
-#fi
-#if [ $(expr "$line" : "symb=.*$") -gt 0 ]; then
-#line=$(echo "$line" | sed s/\([^][]*\)//)
-##line=$(echo "$line" | sed 's/^[^:]*://g')
-#        echo "$line" | sed s/symb=// | xargs >> "$BENCHMARK-Mode2-TC/T$testcaseCount.txt"
-#testcaseCount=`expr $testcaseCount + 1`
-#fi
-#if [ $(expr "$line" : "OUTPUT.*$") -gt 0 ]; then
-#line=$(echo "$line" | sed s/\([^][]*\)//)
-#line=$(echo "$line" | sed 's/^[^:]*://g')
-#        echo "$line" | sed s/OUTPUT// | xargs >> "$BENCHMARK-Mode2-TC/T$testcaseCount.txt"
-#fi
+#cd SequenceGenerator
+#javac DetectAssertions.java
+#java DetectAssertions $BENCHMARK
+#cd ..
 
 
-#done < $BENCHMARK-resultCheck.txt
-
-#awk '/Trace/ || /symb*=/' CBMC/$BENCHMARK-result-SC-MCC.txt > $BENCHMARK-resultCheck.txt
-#mkdir $BENCHMARK-Mode2-TC
-#testcaseCount=0
-#while read -r line; do 
-#	if [ $(expr "$line" : "Trace.*$") -gt 0 ]; then ## begins with 'OUTPUT'
-#	testcaseCount=`expr $testcaseCount + 1`
-#	fi
-#	if [ $(expr "$line" : "symb*=.*$") -gt 0 ]; then
-#	line=$(echo "$line" | sed s/\([^][]*\)//) 
-#	line=$(echo "$line" | sed 's/^[^:]*://g')
-#        echo "$line" | sed s/symb*=// | xargs >> "$BENCHMARK-Mode2-TC/T$testcaseCount.txt"
-#	fi
-#done < $BENCHMARK-resultCheck.txt
-
-awk '/Trace/ || /INPUT/' CBMC/$BENCHMARK-result-SC-MCC.txt > $BENCHMARK-resultCheck.txt
-mkdir $BENCHMARK-Mode2-TC
-testcaseCount=0
-while read -r line; do 
-	if [ $(expr "$line" : "Trace.*$") -gt 0 ]; then ## begins with 'OUTPUT'
-	testcaseCount=`expr $testcaseCount + 1`
-	fi
-	if [ $(expr "$line" : "INPUT.*$") -gt 0 ]; then
-	line=$(echo "$line" | sed s/\([^][]*\)//) 
-	line=$(echo "$line" | sed 's/^[^:]*://g')
-        echo "$line" | sed s/INPUT// | xargs >> "$BENCHMARK-Mode2-TC/T$testcaseCount.txt"
-	fi
-done < $BENCHMARK-resultCheck.txt
-
-
-#awk '/Trace/ || /OUTPUT/' CBMC/$BENCHMARK-result-SC-MCC.txt > $BENCHMARK-resultCheck.txt
-#mkdir $BENCHMARK-Mode2-TC
-#testcaseCount=0
-#while read -r line; do 
-#	if [ $(expr "$line" : "Trace.*$") -gt 0 ]; then ## begins with 'OUTPUT'
-#	testcaseCount=`expr $testcaseCount + 1`
-#	fi
-#	if [ $(expr "$line" : "OUTPUT.*$") -gt 0 ]; then
-#	line=$(echo "$line" | sed s/\([^][]*\)//) 
-#	line=$(echo "$line" | sed 's/^[^:]*://g')
-#        echo "$line" | sed s/OUTPUT// | xargs >> "$BENCHMARK-Mode2-TC/T$testcaseCount.txt"
-#	fi
-#done < $BENCHMARK-resultCheck.txt
-rdfind -deleteduplicates true -makeresultsfile false $BENCHMARK-Mode2-TC
+#rdfind -deleteduplicates true -makeresultsfile false $BENCHMARK-Mode2-TC
 
 Ares2=$(date +%s.%N)
 dtA=$(echo "$Ares2 - $Ares1" | bc)
@@ -200,6 +134,7 @@ mv SequenceGenerator/exp/meta $BENCHMARK-RESULTS/Mode2/
 mv SequenceGenerator/exp/* $BENCHMARK-RESULTS/Mode2/PredicatesResults
 mv SequenceGenerator/$BENCHMARK.c $BENCHMARK-RESULTS/Mode2/PredicatesResults
 rm SequenceGenerator/err.txt
+mv CBMC/$BENCHMARK-result-SC-MCC-original.txt $BENCHMARK-RESULTS/Mode2/CBMC
 mv CBMC/$BENCHMARK-result-SC-MCC.txt $BENCHMARK-RESULTS/Mode2/CBMC
 mv CBMC/$BENCHMARK-Violated-Lines.txt $BENCHMARK-RESULTS/Mode2/CBMC
 mv CBMC/$BENCHMARK-MODE2-ASSERT-REPORT.txt $BENCHMARK-RESULTS/Mode2/CBMC
