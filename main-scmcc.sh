@@ -74,6 +74,10 @@ cp Programs/GCOV/$BENCHMARK.c MutationAnalysis/
 Ares1=$(date +%s.%N)
 let dtA=0
 
+cd CBMC
+./PartialMetaProg.sh $BENCHMARK.c
+mv keyValues.txt ../SequenceGenerator/
+cd ..
 
 cd SequenceGenerator
 ./seqshell.sh $BENCHMARK.c $VERSION 
@@ -130,6 +134,7 @@ echo "****************Time Mutation Analysis Mode2 Report - End*****************
 mkdir $BENCHMARK-RESULTS/Mode2
 mkdir $BENCHMARK-RESULTS/Mode2/PredicatesResults
 mkdir $BENCHMARK-RESULTS/Mode2/CBMC
+mv SequenceGenerator/keyValues.txt $BENCHMARK-RESULTS/Mode2/
 mv SequenceGenerator/exp/meta $BENCHMARK-RESULTS/Mode2/
 mv SequenceGenerator/exp/* $BENCHMARK-RESULTS/Mode2/PredicatesResults
 mv SequenceGenerator/$BENCHMARK.c $BENCHMARK-RESULTS/Mode2/PredicatesResults

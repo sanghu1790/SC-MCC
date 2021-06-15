@@ -19,9 +19,21 @@ import java.io.LineNumberReader;
  */
 public class MetaJavaFileGenerator_V4{
     public static void main(String[] args) throws FileNotFoundException, IOException {
+	BufferedReader keyValueFile=new BufferedReader(new FileReader("keyValues.txt"));
+	String eachValue=keyValueFile.readLine();
+	Map<String,String> mapOfPredAndSeq=new HashMap<String,String>();
+	//System.out.println("*********************"+mapPredicate.size());
+
+	while(eachValue!=null){
+		String nextLine = keyValueFile.readLine();
+		//System.out.println("eachValue*********************"+eachValue);
+		mapOfPredAndSeq.put(eachValue,nextLine );
+		eachValue = keyValueFile.readLine();
+	}
 
         BufferedReader PC=new BufferedReader(new FileReader("exp/Condition_And_Predicates.txt"));
         String r=PC.readLine();
+        String predicate1 = r;
         int no_of_pred=0;
 	Map<String,String> mapPredicate=new HashMap<String,String>();
         
@@ -52,8 +64,10 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 //Set<Integer> sortedKeys = sortedMapPosition.keySet();
 	    String predicate = r;
 	    String finalPredicateArray="";
+	    String finalPredicateArray1="";
 	    String decisionPredicate="";
-	    
+	    String assertStmts1 = "";					
+	   String assertStmts2 = "";
             if(r.contains("&&")||r.contains("||")){
 
             	r=r.replace("&&", "~");
@@ -99,15 +113,15 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 					}
 					
 					sortedKeysIndex++;
-					if(insertFlag==0){
-					String assertStmts1 = "__CPROVER_cover(!("+p[n2]+") == 0);";					
-					String assertStmts2 = "__CPROVER_cover(!(!("+p[n2]+")) == 0);";
-					finalPredicateArray = finalPredicateArray + "\n" +assertStmts1 + "\n" +assertStmts2;
-					}
+//					if(insertFlag==0){
+//					assertStmts1 = "__CPROVER_cover(("+p[n2]+") );";					
+//					assertStmts2 = "__CPROVER_cover((!("+p[n2]+")) );";
+//					finalPredicateArray1 = finalPredicateArray1 + assertStmts1 + "\n" +assertStmts2;
+//					}
 		
 				}
 				decisionPredicate = finalPredicate;
-				finalPredicate = "__CPROVER_cover(!("+finalPredicate+")  == 0);";
+				finalPredicate = "__CPROVER_cover(("+finalPredicate+")  );";
 				finalPredicateArray = finalPredicateArray + "\n" +finalPredicate;	
 				//System.out.println("*********************"+finalPredicate);
 				out_cp_onlyvalue.println(finalPredicate);
@@ -126,14 +140,16 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 	    	//System.out.println("*********************"+p.length);
 
             }
-	    if(decisionPredicate==""){
-		decisionPredicate = predicate;
-	    }
-	    decisionPredicate=decisionPredicate.replace("||", "$");
-	    String Stmts1 = "__CPROVER_cover(!(("+decisionPredicate+"))  == 0);";
-	    String Stmts2 = "__CPROVER_cover(!(!("+decisionPredicate+"))  == 0);";		
-            finalPredicateArray = finalPredicateArray + "\n" +Stmts1 + "\n" +Stmts2;
-	    System.out.println("1*********************"+finalPredicateArray);
+            
+//	    finalPredicateArray = finalPredicateArray + "\n" +finalPredicateArray1;
+//	    if(decisionPredicate==""){
+//		decisionPredicate = predicate;
+//	    }
+//	    decisionPredicate=decisionPredicate.replace("||", "$");
+//	    String Stmts1 = "__CPROVER_cover((("+decisionPredicate+"))  );";
+//	    String Stmts2 = "__CPROVER_cover((!("+decisionPredicate+"))  );";		
+//            finalPredicateArray = finalPredicateArray + "\n" +Stmts1 + "\n" +Stmts2;
+//	    System.out.println("1*********************"+finalPredicateArray);
 	    //System.out.println("2*********************"+finalPredicateArray);
 	    mapPredicate.put(predicate, finalPredicateArray);
             r=PC.readLine();
@@ -163,7 +179,14 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 				//System.out.println("*********************eachPredicate "+eachPredicate1);
 					if(eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
 						String assertStmts = mapPredicate.get(eachPredicate);
-						
+						//System.out.println("predicate1*********************"+eachLine);
+	    if(mapOfPredAndSeq.containsKey(eachLine)){
+		String DecisionAndConditions = mapOfPredAndSeq.get(eachLine);
+		DecisionAndConditions=DecisionAndConditions.replace("(signedlongint)", "");
+		DecisionAndConditions=DecisionAndConditions.replace("; ", ";\n");
+		//System.out.println("DecisionAndConditions*********************"+DecisionAndConditions);
+		assertStmts = assertStmts + "\n" + DecisionAndConditions;
+	    }	
 						eachLine=eachLine.replace(eachLine, eachLine +"\n" + assertStmts);
 						int openBraces = 0;
 						int closeBraces = 0;
@@ -214,7 +237,14 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 					assertStmts=assertStmts.replace("||", "&&");
 				}
 				assertStmts=assertStmts.replace("$", "||");
-
+				//System.out.println("predicate1*********************"+eachLine);
+	    if(mapOfPredAndSeq.containsKey(eachLine)){
+		String DecisionAndConditions = mapOfPredAndSeq.get(eachLine);
+		DecisionAndConditions=DecisionAndConditions.replace("(signedlongint)", "");
+		DecisionAndConditions=DecisionAndConditions.replace("; ", ";\n");
+		//System.out.println("DecisionAndConditions*********************"+DecisionAndConditions);
+		assertStmts = assertStmts + "\n" + DecisionAndConditions;
+	    }	
 				eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
 				//System.out.println("*********************eachLine1 "+eachLine);
 				break;
