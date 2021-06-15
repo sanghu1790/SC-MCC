@@ -5,7 +5,7 @@
 //removed
 #endif
 
-#define BOUND 7
+#define BOUND 6
 int kappa;
 int input,output;
 #include <assert.h>
@@ -1336,6 +1336,7 @@ printf("POINT: 251\n");
 printf("POINT: 252\n");
           printf("This is return -2 \n");
         calculate_output(symb);
+        printf("%d",symb);
     }
     
  return 0;

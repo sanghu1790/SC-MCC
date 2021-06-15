@@ -8,7 +8,7 @@
 //removed
 #endif
 
-#define BOUND 7
+#define BOUND 6
 
 
 // inputs
@@ -1149,10 +1149,11 @@ output = -1;
 
 for (int FLAG=0;FLAG<BOUND;FLAG++) {
 printf("POINT: 274\n");
-int symb = nondet_int(); __CPROVER_input("symb",symb);
+int symb; scanf("%d",&symb);
 
 // operate eca engine
 output = calculate_output(symb);
+        printf("%d",symb);
 
 }
 

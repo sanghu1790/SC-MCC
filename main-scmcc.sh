@@ -107,7 +107,7 @@ echo "****************Time Analysis SC-MCC Mode2 Report - End*******************
 
 Xres1=$(date +%s.%N)
 let dtX=0
-
+cp -r $BENCHMARK-RESULTS/Mode1/$BENCHMARK-Mode1-TC/* $BENCHMARK-Mode2-TC/
 cd MutationAnalysis
 ./MA_SC_MCC_V2.sh $BENCHMARK 2
 cd ..

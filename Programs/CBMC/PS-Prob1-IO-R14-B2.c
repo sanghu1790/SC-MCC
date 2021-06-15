@@ -1419,5 +1419,6 @@ printf("POINT: 272\n");
     int symb = nondet_int(); __CPROVER_input("symb",symb);
         // operate eca engine
         calculate_output(symb);
+        printf("%d",symb);
     }
 }

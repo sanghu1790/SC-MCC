@@ -5,7 +5,7 @@
 //removed
 #endif
 
-#define BOUND 7
+#define BOUND 6
 int kappa;
 int input,output;
 #include <assert.h>
@@ -1207,13 +1207,14 @@ printf("POINT: 275\n");
 
     for (int FLAG=0;FLAG<BOUND;FLAG++) {
 printf("POINT: 276\n");
-        int symb = nondet_int(); __CPROVER_input("symb",symb);  
+        int symb; scanf("%d",&symb);  
 printf("POINT: 277\n");
 
          if((symb != 1) && (symb != 2) && (symb != 3) && (symb != 5) && (symb != 4))
 printf("POINT: 278\n");
           printf("This is return -2 \n");
         calculate_output(symb);
+        printf("%d",symb);
     }
     
  return 0;

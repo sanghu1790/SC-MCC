@@ -16,7 +16,8 @@ export BOUND=$3
 
 #./cbmc MetaWithBraces-V$VERSION.c --trace --unwind $BOUND > $BENCHMARK-result-SC-MCC.txt
 #./cbmc --cover assertion MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-SC-MCC.txt
-./cbmc --cover cover MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-SC-MCC.txt
+./cbmc --smt2 --beautify --refine-strings --cover cover MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-SC-MCC.txt
+
 
 sed '0,/** Results:/d' $BENCHMARK-result-SC-MCC.txt > $BENCHMARK-temp1.txt
 sed '/Trace/,$d' $BENCHMARK-temp1.txt > $BENCHMARK-temp2.txt
@@ -51,7 +52,7 @@ mkdir $BENCHMARK-Mode2-TC
 while read -r line; do 
 	
 	line=$(echo "$line" | sed 's/^[^=]*=//g')
-        echo "$line" >> "$BENCHMARK-Mode2-TC/T$testcaseCount.txt"
+        echo "$line" >> "$BENCHMARK-Mode2-TC/BT$testcaseCount.txt"
         if [ $(($counter % $total_varcount)) == 0 ]; then
 		line=$(cat  temp_testcases.txt | head -n 1) 
 		count=${line//[^,]}

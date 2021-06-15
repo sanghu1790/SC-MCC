@@ -10,7 +10,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define BOUND 7
+#define BOUND 6
 int kappa;
 	int inputs[] = {3,1,6,5,2,4};
 
@@ -1419,5 +1419,6 @@ printf("POINT: 272\n");
     int symb = nondet_int(); __CPROVER_input("symb",symb);
         // operate eca engine
         calculate_output(symb);
+        printf("%d",symb);
     }
 }

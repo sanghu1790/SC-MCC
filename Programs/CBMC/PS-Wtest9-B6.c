@@ -8,7 +8,7 @@
 //removed
 #endif
 
-#define BOUND 7
+#define BOUND 6
 
 
 
@@ -1110,6 +1110,7 @@ int symb = nondet_int(); __CPROVER_input("symb",symb);
 
 // operate eca engine
 output = calculate_output(symb);
+        printf("%d",symb);
 
 }
 return 0;

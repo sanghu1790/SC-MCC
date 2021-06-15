@@ -99,15 +99,15 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 					}
 					
 					sortedKeysIndex++;
-					if(insertFlag==0){
-					String assertStmts1 = "__CPROVER_cover(!("+p[n2]+") == 0);";					
-					String assertStmts2 = "__CPROVER_cover(!(!("+p[n2]+")) == 0);";
-					finalPredicateArray = finalPredicateArray + "\n" +assertStmts1 + "\n" +assertStmts2;
-					}
+//					if(insertFlag==0){
+//					String assertStmts1 = "__CPROVER_cover(("+p[n2]+") );";					
+//					String assertStmts2 = "__CPROVER_cover((!("+p[n2]+")) );";
+//					finalPredicateArray = finalPredicateArray + "\n" +assertStmts1 + "\n" +assertStmts2;
+//					}
 		
 				}
 				decisionPredicate = finalPredicate;
-				finalPredicate = "__CPROVER_cover(!("+finalPredicate+")  == 0);";
+				finalPredicate = "__CPROVER_cover(("+finalPredicate+")  );";
 				finalPredicateArray = finalPredicateArray + "\n" +finalPredicate;	
 				//System.out.println("*********************"+finalPredicate);
 				out_cp_onlyvalue.println(finalPredicate);
@@ -130,10 +130,10 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 		decisionPredicate = predicate;
 	    }
 	    decisionPredicate=decisionPredicate.replace("||", "$");
-	    String Stmts1 = "__CPROVER_cover(!(("+decisionPredicate+"))  == 0);";
-	    String Stmts2 = "__CPROVER_cover(!(!("+decisionPredicate+"))  == 0);";		
-            finalPredicateArray = finalPredicateArray + "\n" +Stmts1 + "\n" +Stmts2;
-	    System.out.println("1*********************"+finalPredicateArray);
+//	    String Stmts1 = "__CPROVER_cover((("+decisionPredicate+"))  );";
+//	    String Stmts2 = "__CPROVER_cover((!("+decisionPredicate+"))  );";		
+//            finalPredicateArray = finalPredicateArray + "\n" +Stmts1 + "\n" +Stmts2;
+//	    System.out.println("1*********************"+finalPredicateArray);
 	    //System.out.println("2*********************"+finalPredicateArray);
 	    mapPredicate.put(predicate, finalPredicateArray);
             r=PC.readLine();
@@ -164,7 +164,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 					if(eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
 						String assertStmts = mapPredicate.get(eachPredicate);
 						
-						eachLine=eachLine.replace(eachLine, eachLine +"\n" + assertStmts);
+						//eachLine=eachLine.replace(eachLine, eachLine +"\n" + assertStmts);
 						int openBraces = 0;
 						int closeBraces = 0;
 						while(true){
@@ -180,7 +180,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 								closeBraces++;
 							}
 						}
-						eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
+						//eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
 
 						break;
 					}

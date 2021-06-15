@@ -18,6 +18,7 @@ echo sanghu
 ./extract.sh PS-P2-L-T-R16-B3
 ./extract.sh PS-P2-L-T-R16-B4
 ./extract.sh PS-P2-L-T-R16-B5
+./extract.sh PS-P2-L-T-R16-B6
 #./extract.sh PS-P2-L-T-R16-B7
 #./extract.sh PS-P2-L-T-R16-B10
 #./extract.sh PS-P2-L-T-R16-B12
@@ -26,6 +27,7 @@ echo sanghu
 ./extract.sh PS-P3-L-T-R20-B3
 ./extract.sh PS-P3-L-T-R20-B4
 ./extract.sh PS-P3-L-T-R20-B5
+./extract.sh PS-P3-L-T-R20-B6
 #./extract.sh PS-P3-L-T-R20-B7
 #./extract.sh PS-P3-L-T-R20-B10
 #./extract.sh PS-P3-L-T-R20-B12
@@ -34,6 +36,7 @@ echo sanghu
 ./extract.sh PS-P7-L-T-R16-B3
 ./extract.sh PS-P7-L-T-R16-B4
 ./extract.sh PS-P7-L-T-R16-B5
+./extract.sh PS-P7-L-T-R16-B6
 #./extract.sh PS-P7-L-T-R16-B7
 #./extract.sh PS-P7-L-T-R16-B10
 #./extract.sh PS-P7-L-T-R16-B12
@@ -42,6 +45,7 @@ echo sanghu
 ./extract.sh PS-P8-L-T-R16-B3
 ./extract.sh PS-P8-L-T-R16-B4
 ./extract.sh PS-P8-L-T-R16-B5
+./extract.sh PS-P8-L-T-R16-B6
 #./extract.sh PS-P8-L-T-R16-B7
 #./extract.sh PS-P8-L-T-R16-B10
 #./extract.sh PS-P8-L-T-R16-B12
@@ -50,6 +54,7 @@ echo sanghu
 ./extract.sh PS-P10-L-T-R16-B3
 ./extract.sh PS-P10-L-T-R16-B4
 ./extract.sh PS-P10-L-T-R16-B5
+./extract.sh PS-P10-L-T-R16-B6
 #./extract.sh PS-P10-L-T-R16-B7
 #./extract.sh PS-P10-L-T-R16-B10
 #./extract.sh PS-P10-L-T-R16-B12
@@ -58,6 +63,7 @@ echo sanghu
 ./extract.sh PS-Prob1-IO-R14-B3
 ./extract.sh PS-Prob1-IO-R14-B4
 ./extract.sh PS-Prob1-IO-R14-B5
+./extract.sh PS-Prob1-IO-R14-B6
 #./extract.sh PS-Prob1-IO-R14-B7
 #./extract.sh PS-Prob1-IO-R14-B10
 #./extract.sh PS-Prob1-IO-R14-B12
@@ -90,6 +96,7 @@ echo sanghu
 ./extract.sh PS-Wtest31-B3
 ./extract.sh PS-Wtest31-B4
 ./extract.sh PS-Wtest31-B5
+./extract.sh PS-Wtest31-B6
 #./extract.sh PS-Wtest31-B7
 #./extract.sh PS-Wtest31-B10
 #./extract.sh PS-Wtest31-B12

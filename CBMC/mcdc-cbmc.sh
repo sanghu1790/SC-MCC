@@ -4,8 +4,7 @@ export BOUND=$2
 
 
 
-./cbmc --cover mcdc $BENCHMARK.c --unwind $BOUND  > $BENCHMARK-mcdc-result.txt
-
+./cbmc --smt2 --beautify --refine-strings --cover mcdc $BENCHMARK.c --unwind $BOUND  > $BENCHMARK-mcdc-result.txt
 # code to generate MCDC Assertion report
 sed  '/independence condition/!d' $BENCHMARK-mcdc-result.txt > tempfile1.txt 
 sed  "/decision\\/condition/!d" $BENCHMARK-mcdc-result.txt >> tempfile1.txt 
@@ -35,7 +34,7 @@ mkdir $BENCHMARK-Mode1-TC
 while read -r line; do 
 	
 	line=$(echo "$line" | sed 's/^[^=]*=//g')
-        echo "$line" >> "$BENCHMARK-Mode1-TC/T$testcaseCount.txt"
+        echo "$line" >> "$BENCHMARK-Mode1-TC/AT$testcaseCount.txt"
         if [ $(($counter % $total_varcount)) == 0 ]; then
 		line=$(cat  temp_testcases.txt | head -n 1) 
 		count=${line//[^,]}
@@ -51,5 +50,21 @@ done <  $BENCHMARK-mcdc-result.txt
 rm temp_testcases.txt
 mv $BENCHMARK-Mode1-TC ../
 
-
+#--object-bits n              number of bits used for object addresses
+# --dimacs                     generate CNF in DIMACS format
+# --beautify                   beautify the counterexample (greedy heuristic)
+# --localize-faults            localize faults (experimental)
+# --smt2                       use default SMT2 solver (Z3)
+# --boolector                  use Boolector
+# --cprover-smt2               use CPROVER SMT2 solver
+# --cvc4                       use CVC4
+# --mathsat                    use MathSAT
+# --yices                      use Yices
+# --z3                         use Z3
+# --refine                     use refinement procedure (experimental)
+# --refine-strings             use string refinement (experimental)
+# --string-printable           restrict to printable strings (experimental)
+# --outfile filename           output formula to given file
+# --arrays-uf-never            never turn arrays into uninterpreted functions
+# --arrays-uf-always           always turn arrays into uninterpreted functions
 
