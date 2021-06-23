@@ -1206,6 +1206,7 @@ int symb; scanf("%d",&symb);
 
 // operate eca engine
 output = calculate_output(symb);
+        printf("%d",symb);
 
 }
 return 0;

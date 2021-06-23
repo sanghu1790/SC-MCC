@@ -1588,6 +1588,7 @@ printf("POINT: 411\n");
 printf("POINT: 412\n");
           printf("This is return -2 \n");
          calculate_output(symb);
+        printf("%d",symb);
     }
 	return 0;
 }

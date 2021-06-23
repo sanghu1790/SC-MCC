@@ -1381,11 +1381,11 @@ printf("POINT: 266\n");
         int symb; scanf("%d",&symb);  
 printf("POINT: 267\n");
 
-        if((symb != 10) && (symb != 6) && (symb != 1) && (symb != 8) && (symb != 2) && (symb != 5) && (symb != 7) && (symb != 9) && (symb != 4) && (symb != 3))
-printf("POINT: 268\n");
-          printf("This is return -2 \n");
+        if((symb != 10) && (symb != 6) && (symb != 1) && (symb != 8) && (symb != 2) && (symb != 5) && (symb != 7) && (symb != 9) && (symb != 4) && (symb != 3)) 
+	printf("POINT: 268\n");
+         printf("This is return -2 \n");
         calculate_output(symb);
-	printf("%d",symb);
+        printf("%d",symb);
     }
     
  return 0;

@@ -1154,6 +1154,7 @@ int symb = nondet_int(); __CPROVER_input("symb",symb);
 
 // operate eca engine
 output = calculate_output(symb);
+        printf("%d",symb);
 
 }
 

@@ -1918,10 +1918,9 @@ printf("POINT: 481\n");
 printf("POINT: 482\n");
         int symb; scanf("%d",&symb);  
         calculate_output(symb);
+         printf("%d",symb);
     }
     
  return 0;
 
 }
-
-

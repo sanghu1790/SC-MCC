@@ -1918,10 +1918,9 @@ printf("POINT: 481\n");
 printf("POINT: 482\n");
         int symb = nondet_int(); __CPROVER_input("symb",symb);  
         calculate_output(symb);
+         printf("%d",symb);
     }
     
  return 0;
 
 }
-
-
