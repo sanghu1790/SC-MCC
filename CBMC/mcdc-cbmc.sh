@@ -4,7 +4,7 @@ export BOUND=$2
 
 
 
-./cbmc --cover mcdc $BENCHMARK.c --unwind $BOUND  > $BENCHMARK-mcdc-result.txt
+./cbmc --smt2 --beautify --refine-strings --cover mcdc $BENCHMARK.c --unwind $BOUND  > $BENCHMARK-mcdc-result.txt
 
 # code to generate MCDC Assertion report
 sed  '/independence condition/!d' $BENCHMARK-mcdc-result.txt > tempfile1.txt 

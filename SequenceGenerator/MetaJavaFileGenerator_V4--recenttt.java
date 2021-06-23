@@ -19,15 +19,6 @@ import java.io.LineNumberReader;
  */
 public class MetaJavaFileGenerator_V4{
     public static void main(String[] args) throws FileNotFoundException, IOException {
-
-	String fileName = "";
-	if (args.length == 2) {
-    		fileName = args[0];
-    	}else{
-	        System.err.println("File name not provided!");
-	        System.exit(1);
-    	}
-
 	BufferedReader keyValueFile=new BufferedReader(new FileReader("keyValues.txt"));
 	String eachValue=keyValueFile.readLine();
 	Map<String,String> mapOfPredAndSeq=new HashMap<String,String>();
@@ -45,7 +36,6 @@ public class MetaJavaFileGenerator_V4{
         String predicate1 = r;
         int no_of_pred=0;
 	Map<String,String> mapPredicate=new HashMap<String,String>();
-        Map<String,String> mapDecisions=new HashMap<String,String>();
         
         while(r!=null){
 
@@ -154,22 +144,24 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 	    finalPredicateArray = finalPredicateArray + "\n" +finalPredicateArray1;
 	    if(decisionPredicate==""){
 		decisionPredicate = predicate;
-		decisionPredicate= decisionPredicate.substring(1, decisionPredicate.length()-1); //to match brackets as in keyValues.txt
 	    }
-	    String bound = args[1];
-	    decisionPredicate=decisionPredicate.replace("BOUND", bound); //constant folding
-	    decisionPredicate=decisionPredicate.replace("||", "$"); //to differentiate decision seq OR from other seq
-	    String Stmts1 = "__CPROVER_cover(("+decisionPredicate+"));";
-	    String Stmts2 = "__CPROVER_cover((!("+decisionPredicate+")));";	
-	    mapDecisions.put(predicate, "\n" +Stmts1 + "\n" +Stmts2);	
-            //finalPredicateArray = finalPredicateArray + "\n" +Stmts1 + "\n" +Stmts2;
+	    decisionPredicate=decisionPredicate.replace("||", "$");
+	    String Stmts1 = "__CPROVER_cover((("+decisionPredicate+"))  );";
+	    String Stmts2 = "__CPROVER_cover((!("+decisionPredicate+"))  );";		
+            finalPredicateArray = finalPredicateArray + "\n" +Stmts1 + "\n" +Stmts2;
 //	    System.out.println("1*********************"+finalPredicateArray);
 	    //System.out.println("2*********************"+finalPredicateArray);
 	    mapPredicate.put(predicate, finalPredicateArray);
             r=PC.readLine();
 
         }
-	
+	String fileName = "";
+	if (args.length > 0) {
+    		fileName = args[0];
+    	}else{
+	        System.err.println("File name not provided!");
+	        System.exit(1);
+    	}
 
 	BufferedReader originalFile=new BufferedReader(new FileReader(fileName));
 	String eachLine=originalFile.readLine();
@@ -188,26 +180,14 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 					if(eachLine.replaceAll("\\s+","").contains(eachPredicate1)){
 						String assertStmts = mapPredicate.get(eachPredicate);
 						//System.out.println("predicate1*********************"+eachLine);
-						
-						//decision and condition assert statements from mcdc mode 
-	    					if(mapOfPredAndSeq.containsKey(eachLine)){
-							String DecisionAndConditions = mapOfPredAndSeq.get(eachLine);
-							DecisionAndConditions=DecisionAndConditions.replace("(signedlongint)", "");
-							DecisionAndConditions=DecisionAndConditions.replace("; ", ";\n");
-							//System.out.println("DecisionAndConditions*********************"+DecisionAndConditions);
-							assertStmts = assertStmts + "\n" + DecisionAndConditions;
-	    					}	
-	    					
-	    					//decision assert statements from meta program 
-	    					String assertDecStmts = mapDecisions.get(eachPredicate);
-	    					assertDecStmts=assertDecStmts.replace("$", "||");
-	    					if(assertStmts.contains(assertDecStmts)){
-							assertDecStmts=""; //to avoid redundant decision seq
-	    					}
-	    					
-						eachLine=eachLine.replace(eachLine, eachLine +"\n" + assertStmts + "\n" + assertDecStmts);
-						
-						
+	    if(mapOfPredAndSeq.containsKey(eachLine)){
+		String DecisionAndConditions = mapOfPredAndSeq.get(eachLine);
+		DecisionAndConditions=DecisionAndConditions.replace("(signedlongint)", "");
+		DecisionAndConditions=DecisionAndConditions.replace("; ", ";\n");
+		//System.out.println("DecisionAndConditions*********************"+DecisionAndConditions);
+		assertStmts = assertStmts + "\n" + DecisionAndConditions;
+	    }	
+						eachLine=eachLine.replace(eachLine, eachLine +"\n" + assertStmts);
 						int openBraces = 0;
 						int closeBraces = 0;
 						while(true){
@@ -223,7 +203,7 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 								closeBraces++;
 							}
 						}
-						eachLine=eachLine.replace(eachLine,assertStmts +"\n" + assertDecStmts + "\n" +eachLine);
+						eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
 
 						break;
 					}
@@ -256,26 +236,16 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 				if(assertStmts.contains("||")){
 					assertStmts=assertStmts.replace("||", "&&");
 				}
-				//assertStmts=assertStmts.replace("$", "||");
+				assertStmts=assertStmts.replace("$", "||");
 				//System.out.println("predicate1*********************"+eachLine);
-				
-				//decision and condition assert statements from mcdc mode 
-	    			if(mapOfPredAndSeq.containsKey(eachLine)){
-					String DecisionAndConditions = mapOfPredAndSeq.get(eachLine);
-					DecisionAndConditions=DecisionAndConditions.replace("(signedlongint)", "");
-					DecisionAndConditions=DecisionAndConditions.replace("; ", ";\n");
-					//System.out.println("DecisionAndConditions*********************"+DecisionAndConditions);
-					assertStmts = assertStmts + "\n" + DecisionAndConditions;
-	    			}	
-	    			
-	    			//decision assert statements from meta program 
-	    			String assertDecStmts = mapDecisions.get(eachPredicate);
-				assertDecStmts=assertDecStmts.replace("$", "||");
-				if(assertStmts.contains(assertDecStmts)){
-					assertDecStmts=""; //to avoid redundant decision seq
-	    			}
-	    			
-				eachLine=eachLine.replace(eachLine,assertStmts +"\n" + assertDecStmts + "\n" + eachLine);
+	    if(mapOfPredAndSeq.containsKey(eachLine)){
+		String DecisionAndConditions = mapOfPredAndSeq.get(eachLine);
+		DecisionAndConditions=DecisionAndConditions.replace("(signedlongint)", "");
+		DecisionAndConditions=DecisionAndConditions.replace("; ", ";\n");
+		//System.out.println("DecisionAndConditions*********************"+DecisionAndConditions);
+		assertStmts = assertStmts + "\n" + DecisionAndConditions;
+	    }	
+				eachLine=eachLine.replace(eachLine,assertStmts +"\n" + eachLine);
 				//System.out.println("*********************eachLine1 "+eachLine);
 				break;
 			}

@@ -80,7 +80,7 @@ mv keyValues.txt ../SequenceGenerator/
 cd ..
 
 cd SequenceGenerator
-./seqshell.sh $BENCHMARK.c $VERSION 
+./seqshell.sh $BENCHMARK.c $VERSION $BOUND
 mv exp/meta/MetaWithBraces-V$VERSION.c ../CBMC/
 cd ..
 

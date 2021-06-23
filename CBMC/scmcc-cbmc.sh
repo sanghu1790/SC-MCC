@@ -16,7 +16,7 @@ export BOUND=$3
 
 #./cbmc MetaWithBraces-V$VERSION.c --trace --unwind $BOUND > $BENCHMARK-result-SC-MCC.txt
 #./cbmc --cover assertion MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-SC-MCC.txt
-./cbmc --cover cover MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-SC-MCC.txt
+./cbmc --smt2 --beautify --refine-strings --cover cover MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-SC-MCC.txt
 
 sed '0,/** Results:/d' $BENCHMARK-result-SC-MCC.txt > $BENCHMARK-temp1.txt
 sed '/Trace/,$d' $BENCHMARK-temp1.txt > $BENCHMARK-temp2.txt
