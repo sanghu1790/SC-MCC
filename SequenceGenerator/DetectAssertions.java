@@ -65,7 +65,7 @@ public class DetectAssertions{
 	int feasible_num=(countAllAV - countLoopAV + countUniqueLoopAV);
 	out_report.println(feasible_num);
 	out_report.flush();
-	System.out.println("Total Number of feasible assertion violations = "+feasible_num);
+	//System.out.println("Total Number of feasible assertion violations = "+feasible_num);
 
    }
 }

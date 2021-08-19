@@ -25,32 +25,7 @@ public class MCDC_Sequence_Generator_multiple {
     	}
          BufferedReader fpReadPredicate1 = null;
         try {
-            //---------enter the c file name to generate the conditions and prediactes
-            //fpReadPredicate1 = new BufferedReader(new FileReader("nsichneu.c"));
-            fpReadPredicate1 = new BufferedReader(new FileReader(fileName));
-            String r=fpReadPredicate1.readLine();
-            PrintWriter out_cp=new PrintWriter("exp/Condition_And_Predicates.txt");
-            while(r!=null){
-            //if((!r.contains("#")&&!r.contains("//"))&&(r.contains(" if(")||r.contains(" if (")||r.contains(" while(")||r.contains(" while (")||r.contains(" for(")||r.contains(" for (")||r.contains("<=")||r.contains("==")||r.contains(">=")||r.contains("!=")||r.contains("<")||r.contains(">")||r.contains("&&")||r.contains("||"))){
-            if((!r.contains("#")&&!r.contains("//")&&!r.contains("<<")&&!r.contains("'>'")&&!r.contains("'<'")&&!r.contains(">>"))&&(((r.contains(" if(")||r.contains(" if (")||r.contains("    if (")||r.contains(" while(")||r.contains(" while (")||r.contains(" while(")||r.contains("while(1)")||r.contains("while(0)")||r.contains(" for(")||r.contains(" for (")||r.contains("   for (")))||((r.contains("<=")||r.contains("==")||r.contains(">=")||r.contains("!=")||r.contains("<")||r.contains(">")||r.contains("&&")||r.contains("||"))))){
             
-            if(r.contains(" for(")||r.contains(" for (")||r.contains("  for (")){
-            int k1_f=r.indexOf(';');
-            int k2_f=r.lastIndexOf(';');
-            r=r.substring(k1_f + 1, k2_f);
-            r="("+r+")";
-            }
-            r=r.trim();
-            int p1=r.indexOf('(');
-            int p2=r.lastIndexOf(')');
-            r=r.substring(p1, p2+1);
-            r=r.replace(" ", "");
-            out_cp.println(r);
-	    System.out.println("*********************"+r);
-            out_cp.flush();
-            }
-            r=fpReadPredicate1.readLine();
-            }
           //--------------------------------------------------------
 
           //---------------Creating a java file corresponding to every predicate in order to evalaute the truth values with the dont care items.
@@ -153,7 +128,7 @@ public class MCDC_Sequence_Generator_multiple {
              i_char=93;
             req_r=req_r.replace("@", "||"); //change from `
              req_r=req_r.replace("#", "&&");
-              System.out.println("..................."+req_r);
+             // System.out.println("..................."+req_r);
               pc++;
                PrintWriter out_pred=new PrintWriter("Seq_For_Pred"+pc+".java");
            out_pred.println("import java.io.FileNotFoundException;\n" +
@@ -162,7 +137,6 @@ public class MCDC_Sequence_Generator_multiple {
 "    public static void main(String[] args) throws FileNotFoundException {");
               out_pred.println(" String k"+predicate_count+"=\""+req_r+"\";\n" +
 "        String m"+predicate_count+"=k"+predicate_count+";\n" +
-"        System.out.println(\"\"+k"+predicate_count+");\n" +
 "       k"+predicate_count+"=k"+predicate_count+".replace(\"|\", \"k"+predicate_count+"\");\n" +
 "        k"+predicate_count+"=k"+predicate_count+".replace(\"(\", \"\").replace(\")\", \"\").replaceAll(\"&\", \"\").replaceAll(\"!\", \"\").replaceAll(\"k"+predicate_count+"\", \"\");\n" +
 "        int no_of_var"+predicate_count+"=k"+predicate_count+".length();\n" +
@@ -213,7 +187,7 @@ public class MCDC_Sequence_Generator_multiple {
         expr=expr+arr2[i];
     }
     }
-               System.out.println(""+expr);
+               //System.out.println(""+expr);
                out_pred.println(" exp_val"+predicate_count+"="+expr+";");
 
                out_pred.println("tt"+predicate_count+"[h1"+predicate_count+"][no_of_var"+predicate_count+"]=exp_val"+predicate_count+";\n" +
@@ -234,12 +208,6 @@ public class MCDC_Sequence_Generator_multiple {
 "            dup_dont"+predicate_count+"[h1"+predicate_count+"][no_of_var"+predicate_count+"]= \"F\";\n" +
 "       }\n" +
 "    \n" +
-"    for(int h1"+predicate_count+"=0;h1"+predicate_count+"<p"+predicate_count+";h1"+predicate_count+"++){\n" +
-"     for(int h2"+predicate_count+"=0;h2"+predicate_count+"<=no_of_var"+predicate_count+";h2"+predicate_count+"++){\n" +
-"         System.out.print(dup_dont"+predicate_count+"[h1"+predicate_count+"][h2"+predicate_count+"]+\"    \");\n" +
-"     }\n" +
-"        System.out.println(\"\");\n" +
-"    }\n" +
 "    int bitset"+predicate_count+"[]=new int[p"+predicate_count+"];\n" +
 "    for(int hr"+predicate_count+"=0;hr"+predicate_count+"<p"+predicate_count+";hr"+predicate_count+"++)bitset"+predicate_count+"[hr"+predicate_count+"]=0;\n" +
 "    for(int h1"+predicate_count+"=0;h1"+predicate_count+"<p"+predicate_count+";h1"+predicate_count+"++){\n" +
@@ -267,14 +235,12 @@ public class MCDC_Sequence_Generator_multiple {
 "     }\n" +
 "     //------------------------------------------------\n" +
 "     String MCC_Data"+predicate_count+"[][]=new String[mcc_rows"+predicate_count+"][no_of_var"+predicate_count+"+1];\n" +
-"      System.out.println(\"\\nRefined Shortcircuit MCC Truth Table\");\n" +
 "     for(int ik"+predicate_count+"=0,ikp1"+predicate_count+"=0;ik"+predicate_count+"<p"+predicate_count+";ik"+predicate_count+"++){\n" +
 "           if(bitset"+predicate_count+"[ik"+predicate_count+"]==0){\n" +
 "           for(int h2"+predicate_count+"=0;h2"+predicate_count+"<=no_of_var"+predicate_count+";h2"+predicate_count+"++){\n" +
 "               MCC_Data"+predicate_count+"[ikp1"+predicate_count+"][h2"+predicate_count+"]=dup_dont"+predicate_count+"[ik"+predicate_count+"][h2"+predicate_count+"];\n" +
-"           System.out.print(dup_dont"+predicate_count+"[ik"+predicate_count+"][h2"+predicate_count+"]+\"    \");\n" +
 "               }\n" +
-"              ikp1"+predicate_count+"++;  System.out.println(\"\");\n" +
+"              ikp1"+predicate_count+"++; \n" +
 "           }\n" +
 "          \n" +
 "        }\n" );
@@ -290,10 +256,8 @@ public class MCDC_Sequence_Generator_multiple {
 "        {\n" +
 "            for(int je1"+predicate_count+"=0;je1"+predicate_count+"<mcc_rows"+predicate_count+";je1"+predicate_count+"++){\n" +
 "                 if(array_mark"+predicate_count+"[je1"+predicate_count+"]==0){\n" +
-"                 for(int je3"+predicate_count+"=0;je3"+predicate_count+"<no_of_var"+predicate_count+";je3"+predicate_count+"++){System.out.print(\"\"+MCC_Data"+predicate_count+"[je1"+predicate_count+"][je3"+predicate_count+"]+\",\");\n" +
-"                out_truthTable"+predicate_count+".print(\"\"+MCC_Data"+predicate_count+"[je1"+predicate_count+"][je3"+predicate_count+"]+\",\");\n" +
+"                 for(int je3"+predicate_count+"=0;je3"+predicate_count+"<no_of_var"+predicate_count+";je3"+predicate_count+"++){out_truthTable"+predicate_count+".print(\"\"+MCC_Data"+predicate_count+"[je1"+predicate_count+"][je3"+predicate_count+"]+\",\");\n" +
 "                 }\n" +
-"                     System.out.println(\"\");\n" +
 "                     out_truthTable"+predicate_count+".println();\n" +
 "                     array_mark"+predicate_count+"[je1"+predicate_count+"]=1;\n" +
 "                 }\n" +

@@ -3,16 +3,16 @@
 export BENCHMARK=$1
 export VERSION=$2
 
-javac MCDC_Sequence_Generator_multiple.java
-java MCDC_Sequence_Generator_multiple "$1"
-i=1;
-for file in Seq_For_Pred******.java; do 
-javac Seq_For_Pred$i.java;
-java Seq_For_Pred$i;
+javac MCDC_Sequence_Generator_multiple_mcdc.java
+java MCDC_Sequence_Generator_multiple_mcdc "$1"
+#i=1;
+#for file in Seq_For_Pred******.java; do 
+#javac Seq_For_Pred$i.java;
+#java Seq_For_Pred$i;
 #echo $i
-i=$((i+1));
-done
-rm Seq_For_Pred*
+#i=$((i+1));
+#done
+#rm Seq_For_Pred*
 mkdir "exp/meta" 2> err.txt
 
 if [ $VERSION == 1 ]
@@ -29,8 +29,8 @@ then
    java MetaJavaFileGenerator_V3 "$1"
 elif [ $VERSION == 4 ]
 then
-   javac MetaJavaFileGenerator_V6.java
-   java MetaJavaFileGenerator_V6 "$1" "$BOUND"
+   javac MetaJavaFileGenerator_V5.java
+   java MetaJavaFileGenerator_V5 "$1" "$BOUND"
 fi
 
 

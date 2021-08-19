@@ -1,31 +1,36 @@
 
 export BENCHMARK=$1
-export BOUND=$2
+export VERSION=$2
+export BOUND=$3
+
+./cbmc --smt2 --beautify --refine-strings --cover cover MetaWithBraces-V$VERSION.c --unwind $BOUND  > $BENCHMARK-result-MCDC.txt
 
 
+#sed '0,/** Results:/d' $BENCHMARK-result-MCDC.txt > $BENCHMARK-temp1.txt
+#sed '/Trace/,$d' $BENCHMARK-temp1.txt > $BENCHMARK-temp2.txt
+#sed '/ASSERTION VIOLATION: FAILURE/!d' $BENCHMARK-temp2.txt > $BENCHMARK-temp3.txt
+#sed 's/^.*\(line \)/\1/' $BENCHMARK-temp3.txt > $BENCHMARK-temp4.txt
+#sed -n 's/^[^0-9]*\([0-9]\{1,\}\).*$/\1/p' $BENCHMARK-temp4.txt > $BENCHMARK-Violated-Lines.txt
+#detectederrors=$(wc -l < $BENCHMARK-Violated-Lines.txt)
+#echo "******Total Violated Lines from CBMC******" > $BENCHMARK-MODE1-ASSERT-REPORT.txt
+#echo "Total number Detected Errors (not unique)=: $detectederrors" >> $BENCHMARK-MODE1-ASSERT-REPORT.txt
+#sed '/__CPROVER_assert(/!d' MetaWithBraces-V$VERSION.c > $BENCHMARK-temp6.txt
+#detectedAllAsserts=$(wc -l < $BENCHMARK-temp6.txt)
+#detectedDuplicates=$(wc -l < ../SequenceGenerator/exp/meta/LoopAssertStatements.csv)
+#let totalAssertCount=detectedAllAsserts-detectedDuplicates
+#echo "Total number unique assert statements =: $totalAssertCount" >> $BENCHMARK-MODE1-ASSERT-REPORT.txt
+#rm -r *-temp*.txt
 
-./cbmc --smt2 --beautify --refine-strings --cover mcdc $BENCHMARK.c --unwind $BOUND  > $BENCHMARK-mcdc-result.txt
-# code to generate MCDC Assertion report
-sed  '/independence condition/!d' $BENCHMARK-mcdc-result.txt > tempfile1.txt 
-sed  "/decision\\/condition/!d" $BENCHMARK-mcdc-result.txt >> tempfile1.txt 
-sed  '/Covered function/d' tempfile1.txt > tempfile2.txt 
-total_varcount=$(grep -c 'MC/DC independence condition' tempfile2.txt)
-total_varcount1=$(grep -c "decision\\/condition" tempfile2.txt)
-total_varcount2=`expr $total_varcount + $total_varcount1`
-echo "Total number of MC/DC independence conditions =: $total_varcount2" > $BENCHMARK-MODE1-ASSERT-REPORT.txt
-succ_varcount=$(grep -c 'SATISFIED' tempfile2.txt)
-echo "Total number of SATISFIED conditions =:$succ_varcount" >> $BENCHMARK-MODE1-ASSERT-REPORT.txt
-rm tempfile*.txt
 
-cp $BENCHMARK-mcdc-result.txt $BENCHMARK-mcdc-result-original.txt
-sed -i '0,/Test suite:/d' $BENCHMARK-mcdc-result.txt 
-sed -i '/^$/d'  $BENCHMARK-mcdc-result.txt 
-cat $BENCHMARK-mcdc-result.txt > temp_testcases.txt
+cp $BENCHMARK-result-MCDC.txt $BENCHMARK-result-MCDC-original.txt
+sed -i '0,/Test suite:/d' $BENCHMARK-result-MCDC.txt 
+sed -i '/^$/d'  $BENCHMARK-result-MCDC.txt 
+cat $BENCHMARK-result-MCDC.txt > temp_testcases.txt
 line=$(cat  temp_testcases.txt | head -n 1) 
 count=${line//[^,]}
-echo "${#count}"
+#echo "${#count}"
 sed -i '1d' temp_testcases.txt
-sed -i -e $'s/,/\\\n/g' $BENCHMARK-mcdc-result.txt 
+sed -i -e $'s/,/\\\n/g' $BENCHMARK-result-MCDC.txt 
 total_varcount=$((${#count} + 1))
 counter=1
 testcaseCount=1
@@ -34,37 +39,21 @@ mkdir $BENCHMARK-Mode1-TC
 while read -r line; do 
 	
 	line=$(echo "$line" | sed 's/^[^=]*=//g')
-        echo "$line" >> "$BENCHMARK-Mode1-TC/AT$testcaseCount.txt"
+        echo "$line" >> "$BENCHMARK-Mode1-TC/BT$testcaseCount.txt"
         if [ $(($counter % $total_varcount)) == 0 ]; then
 		line=$(cat  temp_testcases.txt | head -n 1) 
 		count=${line//[^,]}
 		total_varcount=$((${#count} + 1))
 		sed -i '1d' temp_testcases.txt
 		counter=0
-		echo "$counter"
+#		echo "$counter"
 		testcaseCount=`expr $testcaseCount + 1`
 	fi
 	counter=`expr $counter + 1`
 	
-done <  $BENCHMARK-mcdc-result.txt
+done <  $BENCHMARK-result-MCDC.txt
 rm temp_testcases.txt
 mv $BENCHMARK-Mode1-TC ../
 
-#--object-bits n              number of bits used for object addresses
-# --dimacs                     generate CNF in DIMACS format
-# --beautify                   beautify the counterexample (greedy heuristic)
-# --localize-faults            localize faults (experimental)
-# --smt2                       use default SMT2 solver (Z3)
-# --boolector                  use Boolector
-# --cprover-smt2               use CPROVER SMT2 solver
-# --cvc4                       use CVC4
-# --mathsat                    use MathSAT
-# --yices                      use Yices
-# --z3                         use Z3
-# --refine                     use refinement procedure (experimental)
-# --refine-strings             use string refinement (experimental)
-# --string-printable           restrict to printable strings (experimental)
-# --outfile filename           output formula to given file
-# --arrays-uf-never            never turn arrays into uninterpreted functions
-# --arrays-uf-always           always turn arrays into uninterpreted functions
+
 
