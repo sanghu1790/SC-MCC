@@ -81,14 +81,24 @@ List<Integer> sortedKeys = new ArrayList<Integer>(sortedMapPosition.keySet());
 	        		tVal=r1.split(",");
 				Integer sortedKeysIndex = -1;
 				for(int n2=0;n2<tVal.length;n2++){
-
+					if(insertFlag==0 && p[n2].contains("!")){
+						p[n2] = p[n2].replace("!=","$");
+						if(p[n2].contains("!")){
+							p[n2] = p[n2].replace("!","!(");
+							p[n2] = p[n2].replace("$","!=");
+							p[n2] = p[n2]+")";
+						}else
+							p[n2] = p[n2].replace("$","!=");	
+					}
 					////System.out.println(tVal[n2]);
 					//Integer mapIndex=sortedKeys.get(sortedKeysIndex);
 					if(tVal[n2].equals("F")){
+						
 						if(sortedKeysIndex != -1){
 							////System.out.println("!"+p[n2] + finalPredicate.contains(p[n2]));
                                 			finalPredicate = finalPredicate + sortedMapPosition.get(sortedKeys.get(sortedKeysIndex))+ "!("+p[n2]+")";
 						}else{
+							
 							////System.out.println("!"+p[n2] + finalPredicate.contains(p[n2]));
                                 			finalPredicate = "!("+p[n2]+")";
 						}
